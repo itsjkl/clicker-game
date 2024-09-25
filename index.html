@@ -10,20 +10,20 @@
         body {
             font-family: 'Inter', sans-serif;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
         }
 
-        #leftPanel, #rightPanel {
-            width: 40%;
+        #gameContainer {
+            width: 600px;
             padding: 20px;
             background: #fff;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             border-radius: 10px;
-            position: relative;
+            text-align: center;
         }
 
         h1 {
@@ -53,6 +53,7 @@
 
         .store {
             margin-top: 20px;
+            text-align: left;
         }
 
         .store-title {
@@ -106,14 +107,12 @@
 </head>
 <body>
 
-    <div id="leftPanel">
+    <div id="gameContainer">
         <h1>Clicker Game</h1>
         <p class="clicks">Clicks: <span id="score">0</span></p>
         <p class="cps">CPS: <span id="cps">0</span></p>
         <button id="clickBtn" onclick="increaseScore()">Click Me!</button>
-    </div>
 
-    <div id="rightPanel">
         <div class="store">
             <div class="store-title">Store</div>
             <div class="item" onclick="buyUpgrade('doubleClick')">
