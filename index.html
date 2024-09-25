@@ -3,59 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Clicker Game</title>
+    <title>Enhanced Clicker Game</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Verdana', sans-serif;
+            background: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+            color: #fff;
             text-align: center;
             padding: 50px;
-            background-color: #f0f8ff;
         }
+
         h1 {
-            color: #333;
-        }
-        .score {
-            font-size: 24px;
+            font-size: 48px;
             margin-bottom: 20px;
         }
-        button {
+
+        .score {
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+
+        #clickBtn {
+            font-size: 24px;
+            padding: 20px 40px;
+            background-color: #ff5f6d;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        #clickBtn:active {
+            transform: scale(0.98);
+        }
+
+        .powerups {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .powerup {
+            background-color: #ff5f6d;
+            border: none;
+            border-radius: 10px;
+            color: white;
             padding: 15px 30px;
             font-size: 18px;
-            background-color: #4CAF50;
-            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .powerup:hover {
+            background-color: #ff7e85;
+        }
+
+        #resetBtn {
+            margin-top: 40px;
+            background-color: #f44336;
+            padding: 15px 30px;
+            font-size: 18px;
             border: none;
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        #resetBtn {
-            background-color: #f44336;
-        }
+
         #resetBtn:hover {
             background-color: #e53935;
+        }
+
+        .powerup-cost {
+            font-size: 12px;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
 
-    <h1>Clicker Game</h1>
+    <h1>Ultimate Clicker Game</h1>
     <p class="score">Score: <span id="score">0</span></p>
-    <button onclick="increaseScore()">Click Me!</button>
-    <br><br>
-    <button id="resetBtn" onclick="resetScore()">Reset</button>
+    <button id="clickBtn" onclick="increaseScore()">Click Me!</button>
+
+    <div class="powerups">
+        <button class="powerup" onclick="buyDoubleClick()">Double Click (+1 click per click) <br><span class="powerup-cost">Cost: 50 points</span></button>
+        <button class="powerup" onclick="buyGrandma()">Grandma Clicker (1 click per second) <br><span class="powerup-cost">Cost: 100 points</span></button>
+        <button class="powerup" onclick="buyMegaClicker()">Mega Clicker (+10 clicks per click) <br><span class="powerup-cost">Cost: 500 points</span></button>
+    </div>
+
+    <button id="resetBtn" onclick="resetGame()">Reset Game</button>
 
     <script>
         let score = 0;
+        let clicksPerClick = 1;
+        let grandmaInterval = null;
 
         function increaseScore() {
-            score++;
+            score += clicksPerClick;
+            updateScore();
+        }
+
+        function updateScore() {
             document.getElementById('score').textContent = score;
         }
 
-        function resetScore() {
+        function resetGame() {
             score = 0;
-            document.getElementById('score').textContent = score;
+            clicksPerClick = 1;
+            clearInterval(grandmaInterval);
+            updateScore();
+        }
+
+        function buyDoubleClick() {
+            if (score >= 50) {
+                clicksPerClick += 1;
+                score -= 50;
+                updateScore();
+            } else {
+                alert('Not enough points!');
+            }
+        }
+
+        function buyGrandma() {
+            if (score >= 100) {
+                score -= 100;
+                updateScore();
+                if (!grandmaInterval) {
+                    grandmaInterval = setInterval(() => {
+                        score += 1;
+                        updateScore();
+                    }, 1000);
+                }
+            } else {
+                alert('Not enough points!');
+            }
+        }
+
+        function buyMegaClicker() {
+            if (score >= 500) {
+                clicksPerClick += 10;
+                score -= 500;
+                updateScore();
+            } else {
+                alert('Not enough points!');
+            }
         }
     </script>
 
