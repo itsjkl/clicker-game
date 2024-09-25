@@ -82,23 +82,6 @@
             color: #333;
         }
 
-        #muteButton {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 15px;
-            background-color: #ff7675;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #muteButton:hover {
-            background-color: #e55045;
-        }
-
         .click-float {
             position: absolute;
             font-size: 1.2rem;
@@ -132,25 +115,21 @@
             <div class="store-title">Store</div>
             <div class="item" onclick="buyUpgrade('doubleClick')">
                 <span class="item-title">Double Click (+1 click per click)</span>
-                <span class="item-price">Clicks: 50</span>
+                <span class="item-price">Clicks: 15</span>
                 <span class="item-owned">Owned: <span id="doubleClickCount">0</span></span>
             </div>
             <div class="item" onclick="buyUpgrade('grandma')">
                 <span class="item-title">Grandma Clicker (1 click per second)</span>
-                <span class="item-price">Clicks: 100</span>
+                <span class="item-price">Clicks: 10</span>
                 <span class="item-owned">Owned: <span id="grandmaCount">0</span></span>
             </div>
             <div class="item" onclick="buyUpgrade('megaClicker')">
                 <span class="item-title">Mega Clicker (+10 clicks per click)</span>
-                <span class="item-price">Clicks: 500</span>
+                <span class="item-price">Clicks: 30</span>
                 <span class="item-owned">Owned: <span id="megaClickerCount">0</span></span>
             </div>
         </div>
     </div>
-
-    <button id="muteButton" onclick="toggleMusic()">Mute Music</button>
-
-    <audio id="bgMusic"></audio>
 
     <script>
         let score = 0;
@@ -160,60 +139,6 @@
         let grandmaCount = 0;
         let megaClickerCount = 0;
         let clicksPerSecond = 0;
-        let musicPlaying = true;
-
-        // Playlist array with 5 song URLs
-        const playlist = [
-            "https://github.com/itsjkl/clicker-game/raw/refs/heads/main/mf1.mp3",
-            "https://github.com/itsjkl/clicker-game/raw/refs/heads/main/mf2.mp3",
-            "https://github.com/itsjkl/clicker-game/raw/refs/heads/main/mf3.mp3",
-            "https://github.com/itsjkl/clicker-game/raw/refs/heads/main/mf4.mp3",
-            "https://github.com/itsjkl/clicker-game/raw/refs/heads/main/mf5.mp3"
-        ];
-
-        let currentTrackIndex = 0;
-
-        // Shuffle the playlist and play from a random song
-        function shufflePlaylist() {
-            for (let i = playlist.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [playlist[i], playlist[j]] = [playlist[j], playlist[i]];
-            }
-        }
-
-        // Play the next song in the playlist
-        function playNextTrack() {
-            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-            const music = document.getElementById('bgMusic');
-            music.src = playlist[currentTrackIndex];
-            music.play();
-        }
-
-        // Play the first song
-        window.onload = () => {
-            shufflePlaylist(); // Shuffle playlist at start
-            const music = document.getElementById('bgMusic');
-            music.src = playlist[currentTrackIndex];
-            setTimeout(() => {
-                music.play();
-            }, 1500);  // Start music after animation (1.5 seconds)
-
-            // When a track ends, play the next one
-            music.addEventListener('ended', playNextTrack);
-        };
-
-        // Toggle music play/pause
-        function toggleMusic() {
-            const music = document.getElementById('bgMusic');
-            if (musicPlaying) {
-                music.pause();
-                document.getElementById('muteButton').textContent = 'Unmute Music';
-            } else {
-                music.play();
-                document.getElementById('muteButton').textContent = 'Mute Music';
-            }
-            musicPlaying = !musicPlaying;
-        }
 
         // Game functions
         function increaseScore() {
@@ -227,14 +152,14 @@
         }
 
         function buyUpgrade(type) {
-            if (type === 'doubleClick' && score >= 50) {
+            if (type === 'doubleClick' && score >= 15) {
                 clicksPerClick += 1;
-                score -= 50;
+                score -= 15;
                 doubleClickCount++;
                 document.getElementById('doubleClickCount').textContent = doubleClickCount;
                 updateScore();
-            } else if (type === 'grandma' && score >= 100) {
-                score -= 100;
+            } else if (type === 'grandma' && score >= 10) {
+                score -= 10;
                 grandmaCount++;
                 clicksPerSecond += 1;
                 document.getElementById('grandmaCount').textContent = grandmaCount;
@@ -246,9 +171,9 @@
                     }, 1000);
                 }
                 updateScore();
-            } else if (type === 'megaClicker' && score >= 500) {
+            } else if (type === 'megaClicker' && score >= 30) {
                 clicksPerClick += 10;
-                score -= 500;
+                score -= 30;
                 megaClickerCount++;
                 document.getElementById('megaClickerCount').textContent = megaClickerCount;
                 updateScore();
