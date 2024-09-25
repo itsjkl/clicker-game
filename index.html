@@ -7,8 +7,11 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
-        body {
+        * {
             font-family: 'Inter', sans-serif;
+        }
+
+        body {
             background: #f6f7f9;
             color: #333;
             text-align: center;
@@ -94,14 +97,32 @@
 
         .powerup-cost {
             font-size: 14px;
-            color: #888;
-            opacity: 0.8;
+            color: #222;
+            opacity: 0.9;
         }
 
         .owned-count {
             font-size: 14px;
-            color: #999;
+            color: #222;
             margin-top: 5px;
+        }
+
+        .click-float {
+            position: absolute;
+            font-size: 20px;
+            color: #4CAF50;
+            animation: float 1s ease-in-out forwards;
+        }
+
+        @keyframes float {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
         }
     </style>
 </head>
@@ -115,15 +136,15 @@
         <div class="powerup-section">
             <div class="powerup-title">Power-ups</div>
             <button class="powerup" onclick="buyDoubleClick()">Double Click (+1 click per click)
-                <br><span class="powerup-cost">Cost: 50 points</span>
+                <br><span class="powerup-cost">Clicks: 50</span>
                 <br><span class="owned-count">Owned: <span id="doubleClickCount">0</span></span>
             </button>
             <button class="powerup" onclick="buyGrandma()">Grandma Clicker (1 click per second)
-                <br><span class="powerup-cost">Cost: 100 points</span>
+                <br><span class="powerup-cost">Clicks: 100</span>
                 <br><span class="owned-count">Owned: <span id="grandmaCount">0</span></span>
             </button>
             <button class="powerup" onclick="buyMegaClicker()">Mega Clicker (+10 clicks per click)
-                <br><span class="powerup-cost">Cost: 500 points</span>
+                <br><span class="powerup-cost">Clicks: 500</span>
                 <br><span class="owned-count">Owned: <span id="megaClickerCount">0</span></span>
             </button>
         </div>
@@ -167,6 +188,7 @@
                 if (!grandmaInterval) {
                     grandmaInterval = setInterval(() => {
                         score += grandmaCount;
+                        showFloatingText(grandmaCount);
                         updateScore();
                     }, 1000);
                 }
@@ -185,6 +207,21 @@
             } else {
                 alert('Not enough points!');
             }
+        }
+
+        function showFloatingText(amount) {
+            const floatingText = document.createElement('div');
+            floatingText.classList.add('click-float');
+            floatingText.textContent = `+${amount} clicks`;
+            document.body.appendChild(floatingText);
+
+            const randomX = Math.random() * (window.innerWidth - 100);
+            floatingText.style.left = `${randomX}px`;
+            floatingText.style.top = `${window.innerHeight / 2}px`;
+
+            setTimeout(() => {
+                floatingText.remove();
+            }, 1000);
         }
     </script>
 
