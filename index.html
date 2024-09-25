@@ -165,6 +165,36 @@
                 transform: translateY(0);
             }
         }
+
+        /* Add mobile-friendly styles */
+        @media only screen and (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            #leftPanel, #rightPanel {
+                flex: 1;
+                width: 100%;
+                padding: 20px;
+            }
+            #clickBtn {
+                font-size: 24px;
+                padding: 20px 40px;
+            }
+            .store {
+                margin-top: 20px;
+            }
+            .item {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+            .item-title {
+                font-size: 16px;
+            }
+            .item-price, .item-owned {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -258,3 +288,27 @@
                 updateScore();
             } else {
                 alert('Not enough clicks!');
+            }
+        }
+
+        function showFloatingText(text) {
+            const floatElement = document.createElement('span');
+            floatElement.className = 'click-float';
+            floatElement.textContent = `+${text}`;
+            document.body.appendChild(floatElement);
+            setTimeout(() => {
+                floatElement.remove();
+            }, 1000);
+        }
+
+        function toggleMusic() {
+            musicPlaying = !musicPlaying;
+            if (musicPlaying) {
+                document.getElementById('bgMusic').play();
+            } else {
+                document.getElementById('bgMusic').pause();
+            }
+        }
+    </script>
+</body>
+</html>
