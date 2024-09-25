@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random HTML</title>
+    <title>Simple Clicker Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             text-align: center;
             padding: 50px;
+            background-color: #f0f8ff;
         }
         h1 {
             color: #333;
         }
-        p {
-            font-size: 18px;
-            color: #666;
+        .score {
+            font-size: 24px;
+            margin-bottom: 20px;
         }
         button {
-            padding: 10px 20px;
+            padding: 15px 30px;
+            font-size: 18px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -28,18 +29,33 @@
         button:hover {
             background-color: #45a049;
         }
+        #resetBtn {
+            background-color: #f44336;
+        }
+        #resetBtn:hover {
+            background-color: #e53935;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Welcome to My Random Page</h1>
-    <p>This is some random text on a random webpage.</p>
-    <button onclick="changeTextColor()">Click Me!</button>
+    <h1>Clicker Game</h1>
+    <p class="score">Score: <span id="score">0</span></p>
+    <button onclick="increaseScore()">Click Me!</button>
+    <br><br>
+    <button id="resetBtn" onclick="resetScore()">Reset</button>
 
     <script>
-        function changeTextColor() {
-            const p = document.querySelector('p');
-            p.style.color = p.style.color === 'red' ? '#666' : 'red';
+        let score = 0;
+
+        function increaseScore() {
+            score++;
+            document.getElementById('score').textContent = score;
+        }
+
+        function resetScore() {
+            score = 0;
+            document.getElementById('score').textContent = score;
         }
     </script>
 
