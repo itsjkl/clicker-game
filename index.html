@@ -165,47 +165,15 @@
                 transform: translateY(0);
             }
         }
-
-        /* Add mobile-friendly styles */
-        @media only screen and (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            #leftPanel, #rightPanel {
-                flex: 1;
-                width: 100%;
-                padding: 20px;
-            }
-            #clickBtn {
-                font-size: 24px;
-                padding: 20px 40px;
-            }
-            .store {
-                margin-top: 20px;
-            }
-            .item {
-                flex-direction: column;
-                align-items: center;
-                padding: 10px;
-            }
-            .item-title {
-                font-size: 16px;
-            }
-            .item-price, .item-owned {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
-
     <div id="leftPanel">
         <h1>Clicker Game</h1>
-        <p class="clicks">Clicks: <span id="score">0</span></p>
-        <p class="cps">CPS: <span id="cps">0</span></p>
-        <button id="clickBtn" onclick="increaseScore()">Click Me!</button>
+        <div class="clicks">Clicks: <span id="clickCount">0</span></div>
+        <div class="cps">CPS: <span id="cpsCount">0</span></div>
+        <button id="clickBtn" onclick="clickButton()">Click me!</button>
     </div>
-
     <div id="rightPanel">
         <div class="store">
             <div class="store-title">Store</div>
@@ -224,91 +192,166 @@
                 <span class="item-price">Clicks: 500</span>
                 <span class="item-owned">Owned: <span id="megaClickerCount">0</span></span>
             </div>
+            <div class="item" onclick="buyUpgrade('autoClicker')">
+                <span class="item-title">Auto Clicker (0.1 clicks per second)</span>
+                <span class="item-price">Clicks: 8</span>
+                <span class="item-owned">Owned: <span id="autoClickerCount">0</span></span>
+            </div>
+            <div class="item" onclick="buyUpgrade('clickFrenzy')">
+                <span class="item-title">Click Frenzy (+2 clicks per click for 10 seconds)</span>
+                <span class="item-price">Clicks: 200</span>
+                <span class="item-owned">Owned: <span id="clickFrenzyCount">0</span></span>
+            </div>
+            <div class="item" onclick="buyUpgrade('luckyClick')">
+                <span class="item-title">Lucky Click (+5 clicks per click with 20% chance)</span>
+                <span class="item-price">Clicks: 150</span>
+                <span class="item-owned">Owned: <span id="luckyClickCount">0</span></span>
+            </div>
+            <div class="item" onclick="buyUpgrade('clickStorm')">
+                <span class="item-title">Click Storm (+5 clicks per second for 5 seconds)</span>
+                <span class="item-price">Clicks: 300</span>
+                <span class="item-owned">Owned: <span id="clickStormCount">0</span></span>
+            </div>
+            <div class="item" onclick="buyUpgrade('goldenClick')">
+                <span class="item-title">Golden Click (+20 clicks per click with 10% chance)</span>
+                <span class="item-price">Clicks: 1000</span>
+                <span class="item-owned">Owned: <span id="goldenClickCount">0</span></span>
+            </div>
+            <div class="item" onclick="buyUpgrade('superClicker')">
+                <span class="item-title">Super Clicker (+50 clicks per click)</span>
+                <span class="item-price">Clicks: 2000</span>
+                <span class="item-owned">Owned: <span id="superClickerCount">0</span></span>
+            </div>
         </div>
+        <button id="muteButton" onclick="muteSound()">Mute Sound</button>
     </div>
 
-    <button id="muteButton" onclick="toggleMusic()">Mute Music</button>
-
-    <audio id="bgMusic" loop>
-        <source src="https://example.com/lofi.mp3" type="audio/mpeg">
-        Your browser does not support the audio tag.
-    </audio>
-
     <script>
-        let score = 0;
-        let clicksPerClick = 1;
-        let grandmaInterval = null;
+        let clickCount = 0;
         let doubleClickCount = 0;
         let grandmaCount = 0;
         let megaClickerCount = 0;
-        let clicksPerSecond = 0;
-        let musicPlaying = true;
+        let autoClickerCount = 0;
+        let clickFrenzyCount = 0;
+        let luckyClickCount = 0;
+        let clickStormCount = 0;
+        let goldenClickCount = 0;
+        let superClickerCount = 0;
+        let cpsCount = 0;
+        let soundOn = true;
 
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('bgMusic').play();
-            }, 1500);  // Starts music after animation completes (1.5 seconds)
-        };
-
-        function increaseScore() {
-            score += clicksPerClick;
-            updateScore();
-        }
-
-        function updateScore() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('cps').textContent = clicksPerSecond;
-        }
-
-        function buyUpgrade(type) {
-            if (type === 'doubleClick' && score >= 50) {
-                clicksPerClick += 1;
-                score -= 50;
-                doubleClickCount++;
-                document.getElementById('doubleClickCount').textContent = doubleClickCount;
-                updateScore();
-            } else if (type === 'grandma' && score >= 100) {
-                score -= 100;
-                grandmaCount++;
-                clicksPerSecond += 1;
-                document.getElementById('grandmaCount').textContent = grandmaCount;
-                if (!grandmaInterval) {
-                    grandmaInterval = setInterval(() => {
-                        score += grandmaCount;
-                        showFloatingText(grandmaCount);
-                        updateScore();
-                    }, 1000);
-                }
-                updateScore();
-            } else if (type === 'megaClicker' && score >= 500) {
-                clicksPerClick += 10;
-                score -= 500;
-                megaClickerCount++;
-                document.getElementById('megaClickerCount').textContent = megaClickerCount;
-                updateScore();
-            } else {
-                alert('Not enough clicks!');
+        function clickButton() {
+            clickCount += 1 + doubleClickCount + megaClickerCount + superClickerCount;
+            if (Math.random() < 0.2) {
+                clickCount += luckyClickCount * 5;
             }
-        }
-
-        function showFloatingText(text) {
-            const floatElement = document.createElement('span');
-            floatElement.className = 'click-float';
-            floatElement.textContent = `+${text}`;
-            document.body.appendChild(floatElement);
-            setTimeout(() => {
-                floatElement.remove();
+            if (Math.random() < 0.1) {
+                clickCount += goldenClickCount * 20;
+            }
+            document.getElementById("clickCount").innerHTML = clickCount;
+            if (soundOn) {
+                var audio = new Audio('click.mp3');
+                audio.play();
+            }
+            let clickFloat = document.createElement("div");
+            clickFloat.className = "click-float";
+            clickFloat.innerHTML = "+" + (1 + doubleClickCount + megaClickerCount + superClickerCount);
+            if (Math.random() < 0.2) {
+                clickFloat.innerHTML += "+" + luckyClickCount * 5;
+            }
+            if (Math.random() < 0.1) {
+                clickFloat.innerHTML += "+" + goldenClickCount * 20;
+            }
+            document.getElementById("leftPanel").appendChild(clickFloat);
+            setTimeout(function() {
+                clickFloat.remove();
             }, 1000);
         }
 
-        function toggleMusic() {
-            musicPlaying = !musicPlaying;
-            if (musicPlaying) {
-                document.getElementById('bgMusic').play();
+        function buyUpgrade(upgrade) {
+            switch (upgrade) {
+                case 'doubleClick':
+                    if (clickCount >= 50) {
+                        clickCount -= 50;
+                        doubleClickCount++;
+                        document.getElementById("doubleClickCount").innerHTML = doubleClickCount;
+                    }
+                    break;
+                case 'grandma':
+                    if (clickCount >= 100) {
+                        clickCount -= 100;
+                        grandmaCount++;
+                        document.getElementById("grandmaCount").innerHTML = grandmaCount;
+                    }
+                    break;
+                case 'megaClicker':
+                    if (clickCount >= 500) {
+                        clickCount -= 500;
+                        megaClickerCount++;
+                        document.getElementById("megaClickerCount").innerHTML = megaClickerCount;
+                    }
+                    break;
+                case 'autoClicker':
+                    if (clickCount >= 8) {
+                        clickCount -= 8;
+                        autoClickerCount++;
+                        document.getElementById("autoClickerCount").innerHTML = autoClickerCount;
+                    }
+                    break;
+                case 'clickFrenzy':
+                    if (clickCount >= 200) {
+                        clickCount -= 200;
+                        clickFrenzyCount++;
+                        document.getElementById("clickFrenzyCount").innerHTML = clickFrenzyCount;
+                    }
+                    break;
+                case 'luckyClick':
+                    if (clickCount >= 150) {
+                        clickCount -= 150;
+                        luckyClickCount++;
+                        document.getElementById("luckyClickCount").innerHTML = luckyClickCount;
+                    }
+                    break;
+                case 'clickStorm':
+                    if (clickCount >= 300) {
+                        clickCount -= 300;
+                        clickStormCount++;
+                        document.getElementById("clickStormCount").innerHTML = clickStormCount;
+                    }
+                    break;
+                case 'goldenClick':
+                    if (clickCount >= 1000) {
+                        clickCount -= 1000;
+                        goldenClickCount++;
+                        document.getElementById("goldenClickCount").innerHTML = goldenClickCount;
+                    }
+                    break;
+                case 'superClicker':
+                    if (clickCount >= 2000) {
+                        clickCount -= 2000;
+                        superClickerCount++;
+                        document.getElementById("superClickerCount").innerHTML = superClickerCount;
+                    }
+                    break;
+            }
+            document.getElementById("clickCount").innerHTML = clickCount;
+        }
+
+        function muteSound() {
+            soundOn = !soundOn;
+            if (soundOn) {
+                document.getElementById("muteButton").innerHTML = "Mute Sound";
             } else {
-                document.getElementById('bgMusic').pause();
+                document.getElementById("muteButton").innerHTML = "Unmute Sound";
             }
         }
+
+        setInterval(function() {
+            clickCount += grandmaCount + autoClickerCount * 0.1 + clickStormCount * 5;
+            document.getElementById("clickCount").innerHTML = clickCount;
+            cpsCount = grandmaCount + autoClickerCount * 0.1 + clickStormCount * 5;
+            document.getElementById("cpsCount").innerHTML = cpsCount.toFixed(2);
+        }, 1000);
     </script>
 </body>
 </html>
